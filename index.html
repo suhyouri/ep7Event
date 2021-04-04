@@ -1,27 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Arduino Analog Serial - Three.js Mesh Control</title>
+    <style></style>
+  </head>
+  <body>
     <script src="/socket.io/socket.io.js"></script>
+    <script src="https://threejs.org/build/three.js"></script>
     <script>
-    function map_range(value, low1, high1, low2, high2) {
-        return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
-    }
-    const socket = io();
-    socket.on("currentcolor", function (data) {
+
+
+      const socket = io();
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(
+        75,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000
+      );
+      const renderer = new THREE.WebGLRenderer();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
+      const canvas = document.querySelector("canvas.webgl");
+
+      //const gltfLoader = new GLTFLoader();
+      let mixer = null;
+
+      scene.add(camera);
+
+      function map_range(value, low1, high1, low2, high2) {
+        return low2 + ((high2 - low2) * (value - low1)) / (high1 - low1);
+      }
+
+      socket.on("colorValue", function (data) {
         if (data) {
-          let redVal = Math.floor(map_range(parseInt(data),0,1023,0,255))
-          document.body.style.backgroundColor =  `rgb(${redVal},0,0)`
-          console.log("background color to: "+ redVal +", 0, 0");
+          let redVal = Math.floor(map_range(parseInt(data), 0, 1023, 0, 255));
+          let rotateVal = Math.floor(
+            map_range(parseInt(data), 0, 1023, 0, Math.PI * 2)
+          );
+          document.body.style.backgroundColor = `rgb(${redVal},0,0)`;
+          console.log("background color to: " + redVal + ", 0, 0");
+          console.log("rotation value to: " + rotateVal);
+          cube.rotation.y = rotateVal;
+          cube.rotation.x = rotateVal;
         } else {
           console.log("error!");
         }
-    })
+      });
+
+      const geometry = new THREE.BoxGeometry(1, 1, 1);
+      const material = new THREE.MeshBasicMaterial({ color: 0x00ffff });
+      const cube = new THREE.Mesh(geometry, material);
+      scene.add(cube);
+
+      camera.position.z = 5;
+
+      const animate = function () {
+        requestAnimationFrame(animate);
+        renderer.render(scene, camera);
+      };
+
+      animate();
+
+      const ambientLight = new THREE.AmbientLight(0xffffff, 2);
+      scene.add(ambientLight);
+
+      const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+      directionalLight.position.set(-5, 5, 0);
+      directionalLight.position.set(5, 5, 0);
+      directionalLight.position.set(-5, 5, 5);
+      scene.add(directionalLight);
     </script>
-</body>
+  </body>
 </html>
