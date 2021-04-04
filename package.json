@@ -1,0 +1,25 @@
+{
+  "name": "ep7event",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/youriiiiiiiiiiii/ep7Event.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/youriiiiiiiiiiii/ep7Event/issues"
+  },
+  "homepage": "https://github.com/youriiiiiiiiiiii/ep7Event#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "serialport": "^9.0.7",
+    "socket.io": "^4.0.1",
+    "three": "^0.127.0"
+  }
+}
