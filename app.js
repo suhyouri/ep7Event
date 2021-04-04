@@ -1,15 +1,21 @@
+
 const SerialPort = require('serialport')
-const Readline = require('@serialport/parser-readline')
 const express = require('express')
 const app = express()
 const http = require('http').createServer(app)
 const io = require('socket.io')(http)
 const three = require('three')
 
-const port = new SerialPort('/dev/ttyAMA0', {
+import * as THREE from "three";
+import { GLTFLoader } from "./three/examples/jsm/loaders/GLTFLoader.js";
+
+
+const port = new SerialPort('/dev/ttyACM0', {
   baudRate: 9600
 })
-const parser = port.pipe(new Readline({ delimiter: '\r\n' }))
+
+const Readline = require('@serialport/parser-readline')
+const parser = port.pipe(new Readline())//\r\n
 
 app.use(express.static(__dirname + "/"))
 
@@ -31,5 +37,5 @@ port.on('open',function() {
 
 parser.on('data', function(value) {
     console.log(value)
-    io.emit("currentcolor", value);
+    io.emit("colorValue", value);
   })
