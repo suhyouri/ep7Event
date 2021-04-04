@@ -1,14 +1,9 @@
-
 const SerialPort = require('serialport')
 const express = require('express')
 const app = express()
 const http = require('http').createServer(app)
 const io = require('socket.io')(http)
 const three = require('three')
-
-import * as THREE from "three";
-import { GLTFLoader } from "./three/examples/jsm/loaders/GLTFLoader.js";
-
 
 const port = new SerialPort('/dev/ttyACM0', {
   baudRate: 9600
