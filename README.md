@@ -1,3 +1,3 @@
 # ep7Event
 
-## without webpack, run three.js only with script link
+without webpack, let's run three.js only with script link in client side
